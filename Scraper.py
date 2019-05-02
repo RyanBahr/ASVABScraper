@@ -10,12 +10,11 @@ import time
 
 
 
-test1 = open('test1.txt', 'w', encoding="utf-8")
+test1 = open('questions.txt', 'w', encoding="utf-8")
 
-email = "o10428028@nwytg.net"
+email = "v393414@nwytg.net"
 
 driver = webdriver.Firefox()
-driver.implicitly_wait(45) # seconds
 
 driver.get("https://secure.military.com/Recruiting/first?lpid=asvab&asvab=yes")
 
@@ -50,11 +49,8 @@ radio_selector = 0
 
 for x in range(45):
     test1.write("\n\n %s " % (driver.find_element_by_id("sectionInfo")).text)
-    try:
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "cBtn")))
-    finally:
-        pass
-    driver.implicitly_wait(60)
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "cBtn")))
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "answer-value")))
     for x in driver.find_elements_by_class_name("question"):
         question_selector = question_selector + 1
         if answer_selector < len(driver.find_elements_by_class_name('answer-value')):
@@ -78,10 +74,11 @@ for x in range(45):
     answer_selector = 0
     radio_selector = 0
     print(".")
-
+    next_button = driver.find_element_by_class_name("cBtn")
     try:
-        next_button = driver.find_element_by_class_name("cBtn")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "cBtn")))
         driver.execute_script("arguments[0].click();", next_button)
-        time.sleep(10)
+        time.sleep(5)
     finally:
         pass
+driver.quit()
